@@ -1,0 +1,58 @@
+local DiscordLib = loadstring(game:HttpGet"https://raw.githubusercontent.com/dawid-scripts/UI-Libs/main/discord%20lib.txt")()
+local win = DiscordLib:Window("R4y hub")
+
+local serv = win:Server("Main", "")
+
+
+local tab = serv:Channel("Main",function()
+end)
+
+local pl = game.Players.LocalPlayer
+local esp = Instance.new("Highlight")
+local runservice = game:GetService("RunService")
+
+tab:Toggle("Player esp",false,function(Value)
+    if Value == true then
+        game.Players.PlayerAdded:Connect(function(player)
+            local esp_clone = esp:Clone()
+            esp_clone.Parent = player.Character
+            esp_clone.FillColor = Color3.new(255,255,0)
+            esp_clone.Name = "esp"
+        end)
+
+        game.Players.PlayerRemoving:Connect(function(playernew)
+            playernew.Character:FindFirstChild("esp"):Destroy()
+        end)
+
+        runservice.RenderStepped:Connect(function()
+            for i, v in pairs(game.Players:GetChildren()) do
+                if v ~= pl then
+                    if not v.Character:FindFirstChild("Hammer") then
+                        if  not v.Character:FindFirstChild("esp") then
+                            local esp_clone = esp:Clone()
+                            esp_clone.Parent = v.Character
+                            esp_clone.FillColor = Color3.new(255,255,0)
+                            esp_clone.Name = "esp"
+                        end
+
+                    elseif v.Character:FindFirstChild("Hammer") then
+                        if not v.Character:FindFirstChild("esp") then
+                            local esp_clone = esp:Clone()
+                            esp_clone.Parent = v.Character
+                            esp_clone.FillColor = Color3.new(255,0,0)
+                            esp_clone.Name = "esp"
+                        end
+                    end
+                end
+            end
+        end)
+    end
+
+    if Value == false then
+        for i, v in pairs(game.Workspace:GetDescendants()) do
+            if  v.Name == "esp" then
+                v:Destroy()
+            end
+        end
+    end
+end)
